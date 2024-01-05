@@ -9,6 +9,7 @@ if __name__ == "__main__":
 
     AzureStack(app, "azurestack", config=infra_config)
     # TODO: between azure stack and docker stack, acr registry config needs to be passed
+    # also, storage account, container and key needs to be passed to docker
     DockerStack(app, "dockerstack", config=infra_config)
 
     app.synth()
