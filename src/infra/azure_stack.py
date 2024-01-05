@@ -1,9 +1,14 @@
 from pathlib import Path
 
 from cdktf import LocalBackend, TerraformStack
-from cdktf_cdktf_provider_azurerm.kubernetes_cluster import KubernetesCluster, KubernetesClusterDefaultNodePool
+from cdktf_cdktf_provider_azurerm.container_registry import ContainerRegistry
+from cdktf_cdktf_provider_azurerm.kubernetes_cluster import (
+    KubernetesCluster,
+    KubernetesClusterDefaultNodePool,
+)
 from cdktf_cdktf_provider_azurerm.provider import AzurermProvider
 from cdktf_cdktf_provider_azurerm.resource_group import ResourceGroup
+from cdktf_cdktf_provider_azurerm.role_assignment import RoleAssignment
 from cdktf_cdktf_provider_azurerm.storage_account import StorageAccount
 from cdktf_cdktf_provider_azurerm.storage_container import StorageContainer
 from constructs import Construct
@@ -31,7 +36,8 @@ class AzureStack(TerraformStack):
             self.persistent_storage_container,
         ) = self.create_storage()
 
-        # self.kubernetes_cluster = self.create_kubernetes_cluster()
+        self.kubernetes_cluster = self.create_kubernetes_cluster()
+        self.acr_registry = self.create_container_registry()
 
     def configure_provider_and_backend(self):
         backend_file_path: Path = self.config.local_backend_path / "azure.tfstate"
@@ -93,3 +99,23 @@ class AzureStack(TerraformStack):
         )
 
         return aks_cluster
+
+    def create_container_registry(self):
+        container_registry = ContainerRegistry(
+            scope=self,
+            id_="devcontainers_acr",
+            name="acr4devcont",
+            location=self.config.azure_location,
+            sku="Basic",
+            admin_enabled=True,
+        )
+
+        RoleAssignment(
+            scope_=self,
+            id_="acr_pull_aks",
+            principal_id=self.kubernetes_cluster.identity.principal_id,
+            scope=container_registry.id,
+            role_definition_name="AcrPull",
+        )
+
+        return container_registry
