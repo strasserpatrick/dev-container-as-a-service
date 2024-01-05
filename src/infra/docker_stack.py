@@ -1,17 +1,27 @@
 from pathlib import Path
 
 from cdktf import LocalBackend, TerraformStack
-from cdktf_cdktf_provider_docker.provider import DockerProvider
+from cdktf_cdktf_provider_docker.provider import (
+    DockerProvider,
+    DockerProviderRegistryAuth,
+)
 from constructs import Construct
 
-from infra.config import InfraConfig
+from infra.config import InfraConfig, RegistryConfig
 
 
 class DockerStack(TerraformStack):
-    def __init__(self, scope: Construct, id: str, config: InfraConfig):
+    def __init__(
+        self,
+        scope: Construct,
+        id: str,
+        config: InfraConfig,
+        registry_config: RegistryConfig,
+    ):
         super().__init__(scope, id)
 
         self.config = config
+        self.registry_config = registry_config
 
     def configure_provider_and_backend(self):
         backend_file_path: Path = self.config.local_backend_path / "docker.tfstate"
@@ -28,4 +38,11 @@ class DockerStack(TerraformStack):
         DockerProvider(
             scope=self,
             id_="docker_provider",
+            registry_auth=[
+                DockerProviderRegistryAuth(
+                    address=self.registry_config.registry_url,
+                    username="admin",
+                    password=self.registry_config.registry_pass,
+                )
+            ],
         )

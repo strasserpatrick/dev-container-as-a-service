@@ -158,6 +158,24 @@ publication = ">=0.0.3"
 typeguard = ">=2.13.3,<2.14.0"
 
 [[package]]
+name = "cdktf-cdktf-provider-docker"
+version = "10.0.0"
+description = "Prebuilt docker Provider for Terraform CDK (cdktf)"
+optional = false
+python-versions = "~=3.7"
+files = [
+    {file = "cdktf-cdktf-provider-docker-10.0.0.tar.gz", hash = "sha256:68f07abb8f002bf49ad5e733ca65f9cb17a44ffadd6b0ea4945bb15e7a2ff9b6"},
+    {file = "cdktf_cdktf_provider_docker-10.0.0-py3-none-any.whl", hash = "sha256:b2c4cf130ae7c20ed100c4849a24ff7b94886bf33c9a4e034716ec531839c98b"},
+]
+
+[package.dependencies]
+cdktf = ">=0.19.0,<0.20.0"
+constructs = ">=10.0.0,<11.0.0"
+jsii = ">=1.90.0,<2.0.0"
+publication = ">=0.0.3"
+typeguard = ">=2.13.3,<2.14.0"
+
+[[package]]
 name = "certifi"
 version = "2023.11.17"
 description = "Python package for providing Mozilla's CA Bundle."
@@ -1046,4 +1064,4 @@ test = ["websockets"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "a832b9b365e490f9165372aca0cb136ee50f33721e0fd6d1a8809b3f22934576"
+content-hash = "3e8c0e68a0c558524a7f9d6a2c668d2165a40d8ae4324f4d6c3238757de00fbe"

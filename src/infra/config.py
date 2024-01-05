@@ -1,11 +1,18 @@
 from pathlib import Path
 
 from dotenv import load_dotenv
+from pydantic import BaseModel
 from pydantic_settings import BaseSettings
 
 load_dotenv()
 
 root_dir = Path(__file__).parent.parent.parent
+
+
+class RegistryConfig(BaseModel):
+    registry_url: str
+    registry_pass: str
+    registry_repository_name: str = ("dcaas",)
 
 
 class InfraConfig(BaseSettings):
