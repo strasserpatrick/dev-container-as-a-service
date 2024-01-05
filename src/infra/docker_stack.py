@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from cdktf import LocalBackend, TerraformStack
+from cdktf_cdktf_provider_docker.provider import DockerProvider
 from constructs import Construct
 
 from infra.config import InfraConfig
@@ -24,4 +25,7 @@ class DockerStack(TerraformStack):
             path=str(backend_file_path),
         )
 
-        # TODO: add docker provider and install libraries
+        DockerProvider(
+            scope=self,
+            id_="docker_provider",
+        )
