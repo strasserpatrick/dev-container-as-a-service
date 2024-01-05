@@ -36,7 +36,7 @@ def start(
     typer.echo("=" * 50)
     typer.echo(f"Opening {url} in your browser...")
     typer.launch(url)
-    typer.echo(f"Enter the following code in the browser: ")
+    typer.echo("Enter the following code in the browser: ")
     typer.secho(usercode, fg=typer.colors.GREEN, bold=True)
     typer.echo("=" * 50)
 
