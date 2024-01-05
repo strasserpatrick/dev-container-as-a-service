@@ -43,8 +43,6 @@ def start(
     access_token = gh_service.access_token_polling(device_code)
     logging.info("Access Token obtained")
 
-    access_token = gh_service.get_access_token()
-
     k8s_service = get_k8s_service()
     k8s_service.start(access_token=access_token, yaml_file_path=yaml_file)
 
