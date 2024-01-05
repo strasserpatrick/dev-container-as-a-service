@@ -80,6 +80,16 @@ class AzureStack(TerraformStack):
                 vm_size="Standard_D2_v2",
                 node_count=1,
             ),
+            automatic_channel_upgrade="patch",
+            identity={"type": "SystemAssigned"},
+            dns_prefix="dcaks",
+            local_account_disabled=True,
+            sku_tier="Free",
+            azure_active_directory_role_based_access_control={
+                "managed": True,
+                "admin_group_object_ids": [self.config.aks_admin_group_id],
+                "azure_rbac_enabled": False,
+            },
         )
 
         return aks_cluster
