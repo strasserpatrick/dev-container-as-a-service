@@ -1,3 +1,5 @@
+# https://stackoverflow.com/questions/75916837/poetry-include-additional-data-files-in-wheel
+
 apiVersion: v1
 kind: Pod
 metadata:

@@ -1,61 +1,70 @@
-import time
-import typer
-import requests as r
+import logging
+from functools import cache
+from pathlib import Path
 
-from devcontainers.config import GithubParameters
+import typer
+
+from devcontainers.github_service import GithubService
+from devcontainers.kubernetes_service import KubernetesService
 
 app = typer.Typer()
 
-@app.command()
-def start():
-    headers = {'Accept': 'application/json'}
-    
-    data = { "client_id": GithubParameters.client_id, "scope": "read:org"}
+file_dir = Path(__file__).parent
 
-    res = r.post(GithubParameters.login_url, data=data, headers=headers).json()
-    device_code = res['device_code']
+
+@cache
+def get_k8s_service():
+    return KubernetesService()
+
+
+@cache
+def get_github_service():
+    return GithubService()
+
+
+@app.command(help="Github Authorization and starts the dev container")
+def start(
+    yaml_file: Path = typer.Option(
+        file_dir / "vscode-host.yaml",
+        help="Path to the YAML configuration file of pod deployment.",
+    )
+):
+    gh_service = get_github_service()
+
+    device_code, url, usercode = gh_service.get_device_code_with_url_and_usercode()
 
     typer.echo("=" * 50)
-    typer.echo("Please visit {} and enter code {}".format(res['verification_uri'], res['user_code']))
+    typer.echo(f"Opening {url} in your browser...")
+    typer.launch(url)
+    typer.echo(f"Enter the code {usercode} in the browser.")
     typer.echo("=" * 50)
 
-    data = {
-        "client_id": GithubParameters.client_id,
-        "device_code": device_code,
-        "grant_type": "urn:ietf:params:oauth:grant-type:device_code"
-    }
+    logging.info("Device Code obtained")
+    access_token = gh_service.access_token_polling(device_code)
+    logging.info("Access Token obtained")
 
-    res = r.post(GithubParameters.poll_url, data=data, headers=headers).json()
+    access_token = gh_service.get_access_token()
 
-    while 'error' in res:
-        if res['error'] == 'authorization_pending':
-            typer.echo("Waiting for authorization...")
-        
-            time.sleep(7)
-            res = r.post(GithubParameters.poll_url, data=data, headers=headers).json()
-
-        else:
-            typer.echo("Error: {}".format(res['error']))
-            break
-    typer.echo("=" * 50)
-
-    access_token = res['access_token']
-
-    typer.echo("Access Token: {}".format(access_token))
-
-    # TODO: now start kubernetes pod with access token as env variable
+    k8s_service = get_k8s_service()
+    k8s_service.start(access_token=access_token, yaml_file_path=yaml_file)
 
 
-    
-@app.command()
+@app.command(help="Stops the dev container")
 def stop():
-    typer.echo("Goodbye World")
+    k8s_service = get_k8s_service()
+    k8s_service.stop()
 
 
-@app.command()
+@app.command(help="Gets the logs of the dev container")
 def logs():
-    typer.echo("Hello World from logs")
+    k8s_service = get_k8s_service()
+    typer.echo(k8s_service.logs())
+
+
+def main():
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(message)s")
+    app()
 
 
 if __name__ == "__main__":
-    start()
+    main()

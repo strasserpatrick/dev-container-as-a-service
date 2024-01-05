@@ -5,6 +5,13 @@ description = ""
 authors = ["Patrick Strasser <strasserpatrick@outlook.de>"]
 readme = "README.md"
 
+packages = [
+    {include = "devcontainers", from = "src"},
+]
+
+[tool.poetry.scripts]
+devcontainers = "devcontainers.cli:main"
+
 [tool.poetry.dependencies]
 python = "^3.11"
 requests = "^2.31.0"
@@ -15,6 +22,19 @@ kubernetes = "^28.1.0"
 black = "^23.12.1"
 isort = "^5.13.2"
 pyproject-flake8 = "^6.1.0"
+
+[tool.black]
+line-length = 88
+skip = ['.venv']
+
+[tool.isort]
+profile = "black"
+skip = ['.venv']
+line_length = 88
+
+[tool.flake8]
+max-line-length = 88
+exclude = ".venv"
 
 [build-system]
 requires = ["poetry-core"]
