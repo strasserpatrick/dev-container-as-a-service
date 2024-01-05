@@ -3,7 +3,7 @@
 ## Todos
 
 - [ ] increase quotas and add gpu node pool
-- [ ] automate start and stop (and add read logs command)
+- [x] automate start and stop (and add read logs command)
 - [ ] test and verify nvidia cuda and cudnn
 - [ ] create infra repo and code
 
