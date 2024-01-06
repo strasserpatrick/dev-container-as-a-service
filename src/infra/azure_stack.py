@@ -5,6 +5,7 @@ from cdktf_cdktf_provider_azurerm.container_registry import ContainerRegistry
 from cdktf_cdktf_provider_azurerm.kubernetes_cluster import (
     KubernetesCluster,
     KubernetesClusterDefaultNodePool,
+    KubernetesClusterNetworkProfile,
 )
 from cdktf_cdktf_provider_azurerm.provider import AzurermProvider
 from cdktf_cdktf_provider_azurerm.resource_group import ResourceGroup
@@ -98,6 +99,10 @@ class AzureStack(TerraformStack):
                 "admin_group_object_ids": [self.config.aks_admin_group_id],
                 "azure_rbac_enabled": False,
             },
+            network_profile=KubernetesClusterNetworkProfile(
+                network_plugin="kubenet",
+                network_policy="calico",
+            ),
         )
 
         return aks_cluster
@@ -116,7 +121,7 @@ class AzureStack(TerraformStack):
         RoleAssignment(
             scope_=self,
             id_="acr_pull_aks",
-            principal_id=self.kubernetes_cluster.identity.principal_id,
+            principal_id=self.kubernetes_cluster.kubelet_identity.object_id,
             scope=container_registry.id,
             role_definition_name="AcrPull",
         )
@@ -133,5 +138,6 @@ class AzureStack(TerraformStack):
     def get_registry_configuration(self) -> RegistryConfig:
         return RegistryConfig(
             registry_url=self.acr_registry.login_server,
+            registry_username=self.acr_registry.admin_username,
             registry_pass=self.acr_registry.admin_password,
         )

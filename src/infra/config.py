@@ -11,6 +11,7 @@ root_dir = Path(__file__).parent.parent.parent
 
 class RegistryConfig(BaseModel):
     registry_url: str
+    registry_username: str
     registry_pass: str
     registry_repository_name: str = "dcaas"
 
@@ -28,6 +29,7 @@ class InfraConfig(BaseSettings):
     azure_resource_group_name: str = "devcontainers"
     aks_admin_group_id: str
     local_backend_path: Path = root_dir / ".terraform"
+    docker_image_tag_version: str = "0.0.1"
 
 
 infra_config = InfraConfig()
