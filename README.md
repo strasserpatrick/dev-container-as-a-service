@@ -81,6 +81,8 @@ kubectl create secret generic github-access-token --from-literal=access_token=<a
 - aks namespace
 
 TBD: Who sets kubectl config? I think the start command because we do not need a kubernetes provider then.
+Infra pulls the kubeconfig and stores it at some location for user. Environment variable is set to location.
+Environment variable has to have name `DEVCONTAINER_KUBECONFIG_PATH`. The client takes this variable (or default location) for setting the kubeconfig.
 
 ### Start
 

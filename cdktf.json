@@ -1,0 +1,12 @@
+{
+  "language": "python",
+  "app": "PYTHONPATH='src/' poetry run python src/infra/deployer.py",
+  "projectId": "6f870210-b820-4b62-86ed-427660d5cb50",
+  "sendCrashReports": "false",
+  "terraformProviders": [],
+  "terraformModules": [],
+  "codeMakerOutput": "imports",
+  "context": {
+
+  }
+}

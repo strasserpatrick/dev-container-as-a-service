@@ -1,4 +1,5 @@
 import logging
+import os
 from pathlib import Path
 
 import yaml
@@ -11,7 +12,9 @@ class KubernetesService:
 
     def __init__(self, namespace: str = "dev"):
         self.namespace = namespace
-        config.load_kube_config()
+
+        kube_config_path = os.environ.get("DEVCONTAINER_KUBECONFIG_PATH", None)
+        config.load_kube_config(kube_config_path)
         self.v1 = client.CoreV1Api()
 
     def start(self, access_token: str, yaml_file_path: Path):
