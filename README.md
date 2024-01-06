@@ -35,6 +35,8 @@
 - Azure Subscription
 - CDKTF ([installation guide](https://developer.hashicorp.com/terraform/tutorials/cdktf/cdktf-install?variants=cdk-language%3Apython))
 - Poetry ([installation guide](https://python-poetry.org/docs/#installation))
+- Kubectl ([installation guide](https://kubernetes.io/docs/tasks/tools/))
+- Kubelogin ([installation guide](https://azure.github.io/kubelogin/install.html))
 
 ### Steps
 
