@@ -7,7 +7,7 @@ from cdktf_cdktf_provider_docker.provider import (
 )
 from constructs import Construct
 
-from infra.config import InfraConfig, RegistryConfig
+from infra.config import InfraConfig, RegistryConfig, StorageConfig
 
 
 class DockerStack(TerraformStack):
@@ -17,11 +17,13 @@ class DockerStack(TerraformStack):
         id: str,
         config: InfraConfig,
         registry_config: RegistryConfig,
+        storage_config: StorageConfig,
     ):
         super().__init__(scope, id)
 
         self.config = config
         self.registry_config = registry_config
+        self.storage_config = storage_config
 
     def configure_provider_and_backend(self):
         backend_file_path: Path = self.config.local_backend_path / "docker.tfstate"

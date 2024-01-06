@@ -13,7 +13,7 @@ from cdktf_cdktf_provider_azurerm.storage_account import StorageAccount
 from cdktf_cdktf_provider_azurerm.storage_container import StorageContainer
 from constructs import Construct
 
-from infra.config import InfraConfig
+from infra.config import InfraConfig, RegistryConfig, StorageConfig
 
 
 class AzureStack(TerraformStack):
@@ -119,3 +119,16 @@ class AzureStack(TerraformStack):
         )
 
         return container_registry
+
+    def get_storage_configuration(self) -> StorageConfig:
+        return StorageConfig(
+            storage_account_name=self.persistent_storage_account.name,
+            storage_account_key=self.persistent_storage_account.primary_access_key,
+            storage_container_name=self.persistent_storage_container.name,
+        )
+
+    def get_registry_configuration(self) -> RegistryConfig:
+        return RegistryConfig(
+            registry_url=self.acr_registry.login_server,
+            registry_pass=self.acr_registry.admin_password,
+        )

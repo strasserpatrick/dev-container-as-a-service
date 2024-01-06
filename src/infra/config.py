@@ -12,7 +12,13 @@ root_dir = Path(__file__).parent.parent.parent
 class RegistryConfig(BaseModel):
     registry_url: str
     registry_pass: str
-    registry_repository_name: str = ("dcaas",)
+    registry_repository_name: str = "dcaas"
+
+
+class StorageConfig(BaseModel):
+    storage_account_name: str
+    storage_account_key: str
+    storage_container_name: str = "vscodeuser"
 
 
 class InfraConfig(BaseSettings):

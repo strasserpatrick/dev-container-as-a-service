@@ -7,9 +7,16 @@ from infra.docker_stack import DockerStack
 if __name__ == "__main__":
     app = App()
 
-    AzureStack(app, "azurestack", config=infra_config)
-    # TODO: between azure stack and docker stack, acr registry config needs to be passed
-    # also, storage account, container and key needs to be passed to docker
-    DockerStack(app, "dockerstack", config=infra_config)
+    azure_stack = AzureStack(app, "azurestack", config=infra_config)
+    storage_config = azure_stack.get_storage_configuration()
+    registry_config = azure_stack.get_registry_configuration()
+
+    DockerStack(
+        app,
+        "dockerstack",
+        config=infra_config,
+        storage_config=storage_config,
+        registry_config=registry_config,
+    )
 
     app.synth()
