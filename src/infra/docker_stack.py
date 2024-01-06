@@ -25,11 +25,15 @@ class DockerStack(TerraformStack):
         self.registry_config = registry_config
         self.storage_config = storage_config
 
+        self.configure_provider_and_backend()
+
     def configure_provider_and_backend(self):
-        backend_file_path: Path = self.config.local_backend_path / "docker.tfstate"
+        backend_file_path: Path = (
+            self.config.local_backend_path / "docker_stack" / "docker.tfstate"
+        )
 
         if not backend_file_path.exists():
-            self.config.local_backend_path.mkdir(exist_ok=True)
+            backend_file_path.parent.mkdir(exist_ok=True, parents=True)
             backend_file_path.touch()
 
         LocalBackend(

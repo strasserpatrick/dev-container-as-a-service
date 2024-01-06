@@ -26,7 +26,7 @@ class InfraConfig(BaseSettings):
     arm_subscription_id: str
     azure_location: str = "West Europe"
     azure_resource_group_name: str = "devcontainers"
-    aks_admin_group_id: str = ""
+    aks_admin_group_id: str
     local_backend_path: Path = root_dir / ".terraform"
 
 
