@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from cdktf import LocalBackend, TerraformStack
+from cdktf import LocalBackend, TerraformOutput, TerraformStack
 from cdktf_cdktf_provider_azurerm.container_registry import ContainerRegistry
 from cdktf_cdktf_provider_azurerm.kubernetes_cluster import (
     KubernetesCluster,
@@ -15,7 +15,7 @@ from cdktf_cdktf_provider_azurerm.storage_container import StorageContainer
 from constructs import Construct
 
 from infra.config import InfraConfig, RegistryConfig, StorageConfig
-
+from cdktf import Fn
 
 class AzureStack(TerraformStack):
     def __init__(self, scope: Construct, id: str, config: InfraConfig):
@@ -103,6 +103,12 @@ class AzureStack(TerraformStack):
                 network_plugin="kubenet",
                 network_policy="calico",
             ),
+        )
+
+        TerraformOutput(
+            scope=self,
+            id="aks_kubeconfig",
+            value=Fn.nonsensitive(aks_cluster.kube_config_raw),
         )
 
         return aks_cluster

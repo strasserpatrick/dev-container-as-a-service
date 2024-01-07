@@ -6,6 +6,10 @@ import yaml
 from kubernetes import client, config
 from kubernetes.client.rest import ApiException
 
+import subprocess
+
+root_dir = Path(__file__).parent.parent.parent
+
 
 class KubernetesService:
     pod_name: str = "vscode-host"
@@ -13,9 +17,36 @@ class KubernetesService:
     def __init__(self, namespace: str = "dev"):
         self.namespace = namespace
 
-        kube_config_path = os.environ.get("DEVCONTAINER_KUBECONFIG_PATH", None)
-        config.load_kube_config(kube_config_path)
+
+        self.load_kube_config()
         self.v1 = client.CoreV1Api()
+        
+        self.create_namespace_if_not_exists()
+
+    def load_kube_config(self):
+        kube_config_path = os.environ.get("DEVCONTAINER_KUBECONFIG_PATH", None)
+
+        if kube_config_path and not Path(kube_config_path).exists():
+            # use terraform output to create kubeconfig
+            bash_script = root_dir / "scripts" / "terraform_output_to_kubeconfig.sh"
+            subprocess.run(
+                ["bash", str(bash_script)],
+                check=True,
+                capture_output=True,
+            )
+
+        config.load_kube_config(kube_config_path)
+
+    def create_namespace_if_not_exists(self):
+        try:
+            self.v1.create_namespace(
+                client.V1Namespace(metadata=client.V1ObjectMeta(name=self.namespace))
+            )
+            logging.info(f"Namespace {self.namespace} created successfully.")
+
+        except ApiException as e:
+            if e.status != 409:
+                logging.error(f"Error creating namespace: {e}")
 
     def start(self, access_token: str, yaml_file_path: Path):
         try:
