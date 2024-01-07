@@ -1,4 +1,5 @@
 # https://stackoverflow.com/questions/75916837/poetry-include-additional-data-files-in-wheel
+# TODO: insert values from infra output
 
 apiVersion: v1
 kind: Pod
@@ -9,7 +10,7 @@ spec:
   #     gpu: "true" 
   containers:
   - name: vscode-host
-    image: acr4devcontainers.azurecr.io/dcaas/dc:0.3.5
+    image: acr4devcont.azurecr.io/dcaas/dc:0.0.1
     env:
       - name: GITHUB_ACCESS_TOKEN
         valueFrom:
