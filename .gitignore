@@ -169,3 +169,7 @@ cdktf.log
 
 # kubernetes-config
 kubeconfig.yaml
+
+# env files
+.env.infra
+.env.dev
