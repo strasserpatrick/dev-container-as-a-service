@@ -2,6 +2,8 @@
 
 ## Motivation
 
+For a computer science lab, I needed a machine learning environment that exceeds my local compute power. Thus, I needed a cloud solution. For a couple of reasons, existing solutions did not fit my needs (see [Considerations](## Considerations)). One example being Google Colab with its "notebook" environment, that does not allow me to fully access the underlying environment. For example, it is very "hacky" to install alternative Python versions or libraries that are not preinstalled. Therefore, I decided to create my own solution. The following section describes the motivation and benefits of this project.
+
 - "local feeling" with powerful (flexible) hardware (debugging, ide, no nano or vim)
 - sudo permissions for full control (e.g. apt install libraries, cuda, ...)
 - no "notebook like" feeling (preconfigured software, no shell)
