@@ -1,6 +1,8 @@
+import os
 from pathlib import Path
 from typing import Optional
 
+from dotenv import load_dotenv
 from pydantic_settings import BaseSettings
 
 
@@ -12,4 +14,10 @@ class DevcontainerConfig(BaseSettings):
     devcontainer_image_tag: str = "latest"
 
 
-config = DevcontainerConfig()
+def load_devcontainer_config() -> DevcontainerConfig:
+    dotenv_devcontainers = os.environment["DEVCONTAINERS_CONFIG_PATH"]
+    load_dotenv(dotenv_devcontainers)
+    return DevcontainerConfig()
+
+
+devcontainer_config = load_devcontainer_config()

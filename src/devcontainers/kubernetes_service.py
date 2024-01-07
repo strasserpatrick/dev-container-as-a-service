@@ -1,5 +1,4 @@
 import logging
-import subprocess
 from pathlib import Path
 
 import jinja2
@@ -18,25 +17,10 @@ class KubernetesService:
     def __init__(self, namespace: str = "dev"):
         self.namespace = namespace
 
-        self.load_kube_config()
+        config.load_kube_config(devcontainer_config.devcontainer_kubeconfig_path)
         self.v1 = client.CoreV1Api()
 
         self.create_namespace_if_not_exists()
-
-    def load_kube_config(self):
-        if (
-            devcontainer_config.devcontainer_kubeconfig_path
-            and not devcontainer_config.devcontainer_kubeconfig_path.exists()
-        ):
-            # use terraform output to create kubeconfig
-            bash_script = root_dir / "scripts" / "terraform_output_to_kubeconfig.sh"
-            subprocess.run(
-                ["bash", str(bash_script)],
-                check=True,
-                capture_output=True,
-            )
-
-        config.load_kube_config(devcontainer_config.devcontainer_kubeconfig_path)
 
     def create_namespace_if_not_exists(self):
         try:
