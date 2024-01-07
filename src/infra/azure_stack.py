@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from cdktf import LocalBackend, TerraformOutput, TerraformStack
+from cdktf import Fn, LocalBackend, TerraformOutput, TerraformStack
 from cdktf_cdktf_provider_azurerm.container_registry import ContainerRegistry
 from cdktf_cdktf_provider_azurerm.kubernetes_cluster import (
     KubernetesCluster,
@@ -15,7 +15,7 @@ from cdktf_cdktf_provider_azurerm.storage_container import StorageContainer
 from constructs import Construct
 
 from infra.config import InfraConfig, RegistryConfig, StorageConfig
-from cdktf import Fn
+
 
 class AzureStack(TerraformStack):
     def __init__(self, scope: Construct, id: str, config: InfraConfig):

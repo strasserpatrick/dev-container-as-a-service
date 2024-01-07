@@ -10,7 +10,7 @@ spec:
   #     gpu: "true" 
   containers:
   - name: vscode-host
-    image: acr4devcont.azurecr.io/dcaas/dc:0.0.1
+    image: {{ registry_image_tag }}
     env:
       - name: GITHUB_ACCESS_TOKEN
         valueFrom:
