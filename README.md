@@ -23,6 +23,8 @@ For a computer science lab, I needed a machine learning environment that exceeds
 
 - [x] automate start and stop (and add read logs command)
 - [x] create infra repo and code
+- [ ] separate in .env.infra and .env.dev and let script automatically generate .env.dev
+- [ ] refactor: in makefile after deploy, a .env.dev is generated and kubeconfig is converted; cli is configured to look for .env.dev (how to do when package is installed? cli looks for one env var that needs to be set and points to .env.dev)
 - [ ] add documentation for cli
 - [ ] add readme tree
 - [ ] refactor benefits and motivation section and considerations

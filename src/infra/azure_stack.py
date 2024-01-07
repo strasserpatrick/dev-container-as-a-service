@@ -132,6 +132,18 @@ class AzureStack(TerraformStack):
             role_definition_name="AcrPull",
         )
 
+        TerraformOutput(
+            scope=self,
+            id="acr_registry_name",
+            value=Fn.nonsensitive(container_registry.name),
+        )
+
+        TerraformOutput(
+            scope=self,
+            id="docker_image_tag",
+            value=Fn.nonsensitive(self.config.docker_image_tag_version),
+        )
+
         return container_registry
 
     def get_storage_configuration(self) -> StorageConfig:
