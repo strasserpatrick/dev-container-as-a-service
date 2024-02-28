@@ -1,31 +1,47 @@
 # DevContainers
 
+Blueprint for Cloud setup of a development environment with Azure Kubernetes Service (AKS) and Azure Container Registry (ACR). The project is designed to be easily extensible and to provide a "local feeling" with powerful hardware. The project is in an early stage and is not yet ready for production use.
+
+## Local Feeling
+
+The project is designed to provide a "local feeling" with powerful hardware. This means that the user should be able to use the environment as if it was a local machine. This includes the following features:
+
+- Open your code without copying within a few seconds
+- Debugging with Visual Studio Code
+- Full control over the environment (e.g. sudo permissions)
+- No "notebook like" feeling (preconfigured software, no shell like in Colab)
+- No VM because of overhead (os, hardware, ...)
+- No heavy cluster setup time because of complexity
+
+## VsCode Tunnel
+
+No worries about ssh connections and copying your project files all along, just use the CLI to start your deployment pod with
+
+```bash
+python src/devcontainers/cli.py start
+```
+
+and register with your github account. After a few seconds, you can re-open your project with [VsCode Remote Tunnel](https://code.visualstudio.com/docs/remote/tunnels). And bam - you are in your cloud environment.
+
 ## Motivation
 
-- "local feeling" with powerful (flexible) hardware (debugging, ide, no nano or vim)
-- sudo permissions for full control (e.g. apt install libraries, cuda, ...)
-- no "notebook like" feeling (preconfigured software, no shell)
-- no VM because of inflexibility (os, hardware, ...)
-- no heavy cluster setup time because of complexity
+For a computer science lab, I needed a machine learning environment that exceeds my local compute power. Thus, I needed a cloud solution. For a couple of reasons, existing solutions did not fit my needs. One example being Google Colab with its "notebook" environment, that does not allow me to fully access the underlying environment. For example, it is very "hacky" to install alternative Python versions or libraries that are not preinstalled. Therefore, I decided to create my own solution and ruin my bank account in that process.
 
 ## Benefits
 
-- no need to install anything locally (except vscode)
-- cold-start setup time is around 5 minutes
-- easily extensible
-- warm start is around 1 minute (at most)
-- pay per use (just storage costs at idle time)
-- kubecl is hidden from end user
+- easy setup (due to infrastructure as code)
+- serverless pay-per-use (almost no idle costs)
+- fast startup time (due to containerization)
+- flexible hardware reqirements (due to kubernetes)
+- local feeling (debugging, sudo, ...)
 
 ## Todos
 
 - [x] automate start and stop (and add read logs command)
 - [x] create infra repo and code
+- [ ] separate in .env.infra and .env.dev and let script automatically generate .env.dev
 - [ ] add documentation for cli
-- [ ] add readme tree
-- [ ] refactor benefits and motivation section and considerations
 - [ ] increase quotas and add gpu node pool
-- [ ] test and verify nvidia cuda and cudnn
 
 ## Infra Setup
 
@@ -78,14 +94,6 @@
     az aks get-credentials --resource-group <resource_group> --name <cluster_name>
     kubelogin convert-kubeconfig -l azurecli
     ```
-
-## Considerations
-
-- Container instances and container apps only allow 6 cpu cores. This is not enough for every case and not as flexible as aks.
-- I could try to be presented as community project for microsoft
-- A multi user scenario could be possible in aks with one namespace (and persistent storage) per user (or group). Users obviously only are allowed to run start and stop commands. This would be a nice feature for aks.
-- Users could be allowed to push custom images in registry for custom images.
-- Separation of concerns: admin maintains infra repo. Infra creates a namespace for each user in aad group (and a storage container). User communicates with api server and can start and stop his tunnel. Api server is responsible for fetching the users token and storage account key and starting the tunnel. When a new user is added to the aad group, infra needs to be updated. This could be done with a webhook. The api server could be a function app. For now, a single repo with a single user is enough. (then this could in something like a service)
 
 ## Manual Setup
 

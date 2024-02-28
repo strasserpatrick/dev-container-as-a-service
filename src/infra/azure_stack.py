@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from cdktf import LocalBackend, TerraformStack
+from cdktf import Fn, LocalBackend, TerraformOutput, TerraformStack
 from cdktf_cdktf_provider_azurerm.container_registry import ContainerRegistry
 from cdktf_cdktf_provider_azurerm.kubernetes_cluster import (
     KubernetesCluster,
@@ -105,6 +105,12 @@ class AzureStack(TerraformStack):
             ),
         )
 
+        TerraformOutput(
+            scope=self,
+            id="aks_kubeconfig",
+            value=Fn.nonsensitive(aks_cluster.kube_config_raw),
+        )
+
         return aks_cluster
 
     def create_container_registry(self):
@@ -124,6 +130,18 @@ class AzureStack(TerraformStack):
             principal_id=self.kubernetes_cluster.kubelet_identity.object_id,
             scope=container_registry.id,
             role_definition_name="AcrPull",
+        )
+
+        TerraformOutput(
+            scope=self,
+            id="acr_registry_name",
+            value=Fn.nonsensitive(container_registry.name),
+        )
+
+        TerraformOutput(
+            scope=self,
+            id="docker_image_tag",
+            value=Fn.nonsensitive(self.config.docker_image_tag_version),
         )
 
         return container_registry

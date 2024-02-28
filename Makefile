@@ -14,7 +14,10 @@ synth:
 
 @PHONY: deploy
 deploy:
-	@cdktf deploy '*'
+	@cdktf deploy --outputs-file .terraform/output.json '*'
+	@scripts/terraform-output-to-env.sh
+	@scripts/generate-dev-env.sh
+
 
 @PHONY: destroy
 destroy:

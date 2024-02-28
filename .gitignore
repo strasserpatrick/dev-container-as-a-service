@@ -166,3 +166,10 @@ imports/*
 cdktf.out
 cdktf.log
 *terraform.*.tfstate*
+
+# kubernetes-config
+kubeconfig.yaml
+
+# env files
+.env.infra
+.env.dev
