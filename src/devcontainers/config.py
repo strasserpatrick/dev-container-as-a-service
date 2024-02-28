@@ -15,7 +15,7 @@ class DevcontainerConfig(BaseSettings):
 
 
 def load_devcontainer_config() -> DevcontainerConfig:
-    dotenv_devcontainers = os.environment["DEVCONTAINERS_CONFIG_PATH"]
+    dotenv_devcontainers = os.environ["DEVCONTAINERS_CONFIG_PATH"]
     load_dotenv(dotenv_devcontainers)
     return DevcontainerConfig()
 
